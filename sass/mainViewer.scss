@@ -37,6 +37,35 @@ body {
 	// }
 }
 
+.invisible {
+  visibility: hidden;
+  display: none;
+}
+
+#videoHolder {
+  width: 100%;
+  height: 100vh;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  background: black;
+
+  .videoPart {
+    width: 100%;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+
+    video {
+      width: 100%;
+      position: absolute;
+      top: 0px;
+      left: 0px;
+    }
+  }
+
+}
+
 // ==================
 
 /* ========================================================================== */

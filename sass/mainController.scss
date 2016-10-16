@@ -27,6 +27,7 @@ body, html {
 body {
 	color: $textColor;
   background: $bgColor;
+  font-size: 3em;
   //font-family: 'SourceCodePro-Light', sans-serif;
 
 	// @include media (max-width $max-width * 1.2) {

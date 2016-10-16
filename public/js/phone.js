@@ -28,7 +28,9 @@ $( window ).load(function() {
 /////////////
 
 function displayMessage(messageObject) {
-  $("#messageArea").append(messageObject.message)
+  if (messageObject.message !== undefined) {
+    $("#messageArea").append('<div>' + messageObject.message + '</div>');
+  }
 
   if (messageObject.choices !== undefined) {
     var html = ""
