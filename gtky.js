@@ -3,7 +3,7 @@
 var express = require('express');
 // var bodyParser = require('body-parser');
 var app = express();
-var favicon = require('serve-favicon');
+//var favicon = require('serve-favicon');
 
 var genid = require('./genid');
 
@@ -28,7 +28,7 @@ var controllerPairs = []
 // }
 
 app.use(express.static(__dirname + '/public'));
-app.use(favicon(__dirname + '/public/favicon.ico'));
+//app.use(favicon(__dirname + '/public/favicon.ico'));
 
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/pages/movieScreen.html');
@@ -61,16 +61,17 @@ io.on('connection', function(socket){
 
   socket.on('disconnect', function(){
     console.log('%s - user disconnected', new Date().toUTCString());
-    handleDisconnect(socket.id);
+    //handleDisconnect(socket.id);
   });
 
-  socket.on('registerViewer', function(msg){
+  socket.on('registerViewer', function(msg) {
+    console.log("got message from viewer")
     createNewPair(socket.id);
     //io.sockets.to(socket.id).emit('roomId', Math.random());
   });
 
   socket.on('registerController', function(msg){
-    addController(socket.id,msg);
+    //addController(socket.id,msg);
     //createNewPair(socket.id);
     //io.sockets.to(socket.id).emit('roomId', Math.random());
   });
@@ -94,11 +95,16 @@ io.on('connection', function(socket){
   // socket.on('noReturn', function(data){
   //   io.sockets.to(data).emit('noReturn', true);
   // });
+});
 
 ///////////////////////////
 // Custom Functions
 
-function createNewPair(socketID){
+function createNewPair(socketID) {
+  if (controllerPairs.length === 0) {
+    makeUniqueID(socketID);
+    return;
+  }
   for (var i = 0, l = controllerPairs.length; i < l; i++) {
     if (controllerPairs[i].viewerID === socketID) {
       console.log("this viewer exists!")
@@ -108,40 +114,33 @@ function createNewPair(socketID){
   }
 }
 
-function makeUniqueID(socketID){
-  ControllerPair.find().count(function(err, count){
-    // console.log(count);
-    var whichAlpha = 0;
-    if (count > 7950) {
-      whichAlpha = 1;
+function makeUniqueID(socketID) {
+  genid(3,0,function(err,newid) {
+    if (err) {
+      console.error(err)
+      throw err
     }
-    // console.log(whichAlpha);
-    genid(3,0,function(err,newid) {
-      if (err) {
-        throw err
-        return
-      }
 
-      var found = false;
-      for (var i = 0, l = controllerPairs.length; i < l; i++) {
-        if (controllerPairs[i].name === newid) {
-          controllerPairs[i].viewerID = socketID;
-          found = true;
-          break;
-        }
+    var found = false;
+    for (var i = 0, l = controllerPairs.length; i < l; i++) {
+      if (controllerPairs[i].name === newid) {
+        controllerPairs[i].viewerID = socketID;
+        found = true;
+        break;
       }
+    }
 
-      if (!found) {
-        var newPair = {
-          name: newid,
-          viewerID: socketID
-        }
-        controllerPairs.push(newPair)
+    if (!found) {
+      var newPair = {
+        name: newid,
+        viewerID: socketID
       }
-      io.sockets.to(socketID).emit('roomId', newid);
-    });
+      controllerPairs.push(newPair)
+    }
+    io.sockets.to(socketID).emit('roomId', newid );
   });
 }
+
 
 Object.size = function(obj) {
     var size = 0, key;

@@ -6,7 +6,8 @@
       "node": false
     },
     "globals": {
-      "Modernizr": true
+      "Modernizr": true,
+      "io": true
     },
     "rules": {
       "no-use-before-define": 0,
