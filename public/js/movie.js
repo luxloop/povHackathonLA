@@ -1,15 +1,20 @@
 var socket = io();
-var pairInfo;
+var pairInfo = {};
 
 socket.on('roomId', function(msg){
-  pairInfo = msg;
+  pairInfo.name = msg;
   console.log(pairInfo);
 });
 
+socket.on('setPairInfo', function(msg){
+  pairInfo = msg;
+  console.log(msg)
+});
+
 $(document).ready(function() {
-  socket.emit('registerViewer', null);
+  //
 });
 
 $( window ).load(function() {
-  //
+  socket.emit('registerViewer', null);
 });

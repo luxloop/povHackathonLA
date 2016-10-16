@@ -36,7 +36,7 @@ app.get('/', function(req, res){
 
 app.get('/:data', function(req, res){
   //var code = req.params.data;
-  res.sendFile(__dirname + '/pages/movieScreen.html');
+  res.sendFile(__dirname + '/pages/phoneScreen.html');
 });
 
 
@@ -65,15 +65,13 @@ io.on('connection', function(socket){
   });
 
   socket.on('registerViewer', function(msg) {
-    console.log("got message from viewer")
+    console.log("got register message from viewer")
     createNewPair(socket.id);
-    //io.sockets.to(socket.id).emit('roomId', Math.random());
   });
 
-  socket.on('registerController', function(msg){
-    //addController(socket.id,msg);
-    //createNewPair(socket.id);
-    //io.sockets.to(socket.id).emit('roomId', Math.random());
+  socket.on('registerController', function(msg) {
+    console.log("got register message from controller")
+    addController(socket.id,msg);
   });
 
   // socket.on('started', function(dest){
@@ -141,6 +139,16 @@ function makeUniqueID(socketID) {
   });
 }
 
+function addController(socketID, roomID) {
+  for (var i = 0, l = controllerPairs.length; i < l; i++) {
+    if (controllerPairs[i].name === roomID) {
+      controllerPairs[i].phoneID = socketID;
+      console.log(controllerPairs[i]);
+      io.sockets.to(socketID).emit('setPairInfo', controllerPairs[i] );
+      io.sockets.to(controllerPairs[i].viewerID).emit('setPairInfo', controllerPairs[i] );
+    }
+  }
+}
 
 Object.size = function(obj) {
     var size = 0, key;
