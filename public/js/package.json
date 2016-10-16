@@ -1,0 +1,17 @@
+{
+  "eslintConfig": {
+    "extends": "luxloop",
+    "env": {
+      "browser": true,
+      "node": false
+    },
+    "globals": {
+      "Modernizr": true
+    },
+    "rules": {
+      "no-use-before-define": 0,
+      "vars-on-top": 0,
+      "no-magic-numbers": 0
+    }
+  }
+}
