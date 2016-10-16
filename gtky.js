@@ -7,9 +7,10 @@ var app = express();
 
 var genid = require('./genid');
 
-
-// replace this with a real DB if we decide to scale
+///////////////////////////
+// replace all this with a real DB if we decide to scale
 var controllerPairs = []
+
 
 ///////////////////////////
 // Routes
@@ -74,9 +75,15 @@ io.on('connection', function(socket){
     addController(socket.id,msg);
   });
 
-  // socket.on('started', function(dest){
-  //   io.sockets.to(dest).emit('started', socket.id);
-  // });
+  socket.on('sendMessage', function(msg) {
+    //console.log(message)
+    io.sockets.to(msg.dest).emit('getMessage', msg.message);
+  });
+
+  socket.on('makeChoice', function(msg) {
+    //console.log(message)
+    io.sockets.to(msg.dest).emit('madeChoice', msg);
+  });
 
   // socket.on('songPart', function(data){
   //   io.sockets.to(data.controller).emit('songPart', data);

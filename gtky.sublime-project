@@ -9,15 +9,6 @@
       ],
       "name": "GulpSass",
       "selector": "source.sass"
-    },
-    {
-      "cmd":
-      [
-        "gulp",
-        "compressjs"
-      ],
-      "name": "GulpCompressJS",
-      "selector": "source.js"
     }
   ],
 	"folders":
@@ -28,6 +19,6 @@
 	],
 	"settings":
 	{
-		"build_on_save": 0
+		"build_on_save": 1
 	}
 }
