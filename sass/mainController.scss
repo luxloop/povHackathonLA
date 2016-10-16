@@ -28,7 +28,7 @@ body {
 	color: $textColor;
   background: $bgColor;
   font-size: 3em;
-  //font-family: 'SourceCodePro-Light', sans-serif;
+  font-family: sans-serif;
 
 	// @include media (max-width $max-width * 1.2) {
 	// 	font-size: 1.5rem;
@@ -45,6 +45,24 @@ body {
   top: 0px;
   left: 0px;
   overflow: scroll;
+
+  div.them {
+    margin: .5em 0;
+    margin-right: 25%;
+    margin-left: 10px;
+    background: #00b3ff;
+    border-radius: 20px;
+    padding: 10px;
+  }
+
+  div.you {
+    margin: .5em 0;
+    margin-left: 25%;
+    margin-right: 10px;
+    background: #999;
+    border-radius: 20px;
+    padding: 10px;
+  }
 }
 
 #inputArea {
@@ -53,8 +71,20 @@ body {
   position: absolute;
   bottom: 0px;
   left: 0px;
-  background: #ccc;
+  background: #eee;
   overflow: hidden;
+  text-align: center;
+  padding-top: 20px;
+}
+
+a {
+  display: block;
+  width: 75%;
+  margin: 0 auto;
+  padding: 10px;
+  border-radius: 20px;
+  background: #bbb;
+  text-decoration: none
 }
 
 // ==================

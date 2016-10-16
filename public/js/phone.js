@@ -29,7 +29,8 @@ $( window ).load(function() {
 
 function displayMessage(messageObject) {
   if (messageObject.message !== undefined) {
-    $("#messageArea").append('<div>' + messageObject.message + '</div>');
+    $("#messageArea").append('<div class="them">' + messageObject.message + '</div>');
+    $("#messageArea").scrollTop($("#messageArea").height());
   }
 
   if (messageObject.choices !== undefined) {
@@ -38,11 +39,16 @@ function displayMessage(messageObject) {
       html += '<a href="#" class="choice" data-choice="' + i + '" data-question="' + messageObject.choiceID + '">' + messageObject.choices[i] + '</a></br>';
     }
     $("#inputArea").html(html);
+  } else {
+    $("#inputArea").html("");
   }
 }
 
 $(document).on('click', '.choice', function(e) {
   e.preventDefault();
+  $("#inputArea").html("");
+  $("#messageArea").append('<div class="you">' + $(this).text() + '</div>');
+  $("#messageArea").scrollTop($("#messageArea").height());
   socket.emit('makeChoice', {dest: pairInfo.viewerID, question: $(this).attr('data-question'), answer: $(this).attr('data-choice')});
   //console.log($(this).attr('data-choice'));
 });

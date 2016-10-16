@@ -8,8 +8,10 @@ var message4 = {message: "But actually..."}
 var message7 = {choices: ["Definitely get that. It's a big deal!","It'll be fine. You got this!"],choiceID: 2}
 var message5 = {message: "Yeah, I'm sooo unprepared. 😔"}
 var message6 = {message: "Thanks! Wish me luck. 😬"}
+var message8 = {}
 
-var videos = [{name: "01", messages: {15: message1, 23: message2, 30: message3, 38: message4, 53: message7}}, {name: "02", messages: {14: message6}}, {name: "03", messages: {15: message5}}, {name: "04"}]
+
+var videos = [{name: "01", messages: {15: message1, 23: message2, 30: message3, 38: message4, 53: message7,69: message8}}, {name: "02", messages: {14: message6}}, {name: "03", messages: {15: message5}}, {name: "04"}]
 var loaded = [];
 var nowPlaying;
 var vidData;
@@ -22,15 +24,30 @@ var willEnd = false;
 socket.on('roomId', function(msg) {
   pairInfo.name = msg;
   console.log(pairInfo);
+  $("#urlCode").text("goodtoknowyou.co/" + msg);
 });
 
 socket.on('setPairInfo', function(msg) {
   pairInfo = msg;
   console.log(msg)
+  goTime();
 });
 
 socket.on('madeChoice', function(msg) {
   console.log(msg)
+  if (msg.question === "2") {
+    if (msg.answer === "0") {
+      nextVid = "03";
+      showAndPlayVideo(nextVid);
+      willEnd = true;
+    } else if (msg.answer === "1") {
+      nextVid = "02";
+      showAndPlayVideo(nextVid);
+      willEnd = true;
+    }
+  } else {
+    $("#ding")[0].play()
+  }
 });
 
 /////////////
@@ -65,7 +82,7 @@ function didLoad(videoId) {
   loaded.push(videoId);
   if (loaded.length === videos.length) {
     console.log("ALL LOADED");
-    showAndPlayVideo("01");
+    showCode();
   }
 }
 
@@ -121,8 +138,16 @@ function checkProgress() {
   }
 }
 
+function showCode() {
+  $("#urlCode").removeClass("invisible");
+}
 
-
+function goTime() {
+  $("#splashHolder").fadeOut(4000,function(){
+    console.log("foo");
+    showAndPlayVideo("01");
+  })
+}
 
 
 

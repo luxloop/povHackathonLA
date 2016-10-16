@@ -70,6 +70,7 @@ body {
   color: #000;
   background: #fff;
   font-size: 3em;
+  font-family: sans-serif;
 }
 
 #messageArea {
@@ -81,14 +82,44 @@ body {
   overflow: scroll;
 }
 
+#messageArea div.them {
+  margin: .5em 0;
+  margin-right: 25%;
+  margin-left: 10px;
+  background: #00b3ff;
+  border-radius: 20px;
+  padding: 10px;
+}
+
+#messageArea div.you {
+  margin: .5em 0;
+  margin-left: 25%;
+  margin-right: 10px;
+  background: #999;
+  border-radius: 20px;
+  padding: 10px;
+}
+
 #inputArea {
   width: 100%;
   height: 25vh;
   position: absolute;
   bottom: 0px;
   left: 0px;
-  background: #ccc;
+  background: #eee;
   overflow: hidden;
+  text-align: center;
+  padding-top: 20px;
+}
+
+a {
+  display: block;
+  width: 75%;
+  margin: 0 auto;
+  padding: 10px;
+  border-radius: 20px;
+  background: #bbb;
+  text-decoration: none;
 }
 
 /* ========================================================================== */
