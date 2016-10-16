@@ -7,6 +7,10 @@ var favicon = require('serve-favicon');
 
 var genid = require('./genid');
 
+
+// replace this with a real DB if we decide to scale
+var controllerPairs = []
+
 ///////////////////////////
 // Routes
 
@@ -27,38 +31,12 @@ app.use(express.static(__dirname + '/public'));
 app.use(favicon(__dirname + '/public/favicon.ico'));
 
 app.get('/', function(req, res){
-  if (process.env.TESTSERV === "true") {
-    res.redirect('http://icantmakeuloveu.com');
-  } else {
-    res.sendFile(__dirname + '/viewer.html');
-  }
-});
-
-app.get('/test', function(req, res){
-  if (process.env.TESTSERV === "true") {
-    res.sendFile(__dirname + '/viewer.html');
-  } else {
-    res.redirect('http://icantmakeuloveu.com');
-  }
-});
-
-app.get('/server', function(req, res){
-  res.sendFile(__dirname + '/overflow.html');
+  res.sendFile(__dirname + '/pages/movieScreen.html');
 });
 
 app.get('/:data', function(req, res){
   //var code = req.params.data;
-  res.sendFile(__dirname + '/controller.html');
-});
-
-app.get('/heartbeats/:data', function(req, res){
-  var code = req.params.data;
-  var codeClean = code.replace(".png", "");
-  if (process.env.TESTSERV === "true") {
-    res.redirect('http://icantmakeuloveu.com/heartbeats/'+code);
-  } else {
-    res.render('payoff', {imageCode: codeClean});
-  }
+  res.sendFile(__dirname + '/pages/movieScreen.html');
 });
 
 
@@ -97,46 +75,73 @@ io.on('connection', function(socket){
     //io.sockets.to(socket.id).emit('roomId', Math.random());
   });
 
-  socket.on('heartbeat', function(beat){
-    if (beat.dest) {
-      io.sockets.to(beat.dest).emit('heartbeat', beat);
-    }
-  });
+  // socket.on('started', function(dest){
+  //   io.sockets.to(dest).emit('started', socket.id);
+  // });
 
-  socket.on('sectionArray', function(data){
-    if (data.dest) {
-      io.sockets.to(data.dest).emit('sectionArray', data);
-    }
-  });
+  // socket.on('songPart', function(data){
+  //   io.sockets.to(data.controller).emit('songPart', data);
+  // });
 
-  socket.on('isDying', function(data){
-    if (data) {
-      io.sockets.to(data).emit('isDying',data);
-    }
-  });
+  // socket.on('hasDied', function(data){
+  //   io.sockets.to(data).emit('hasDied', true);
+  // });
 
-  socket.on('started', function(dest){
-    io.sockets.to(dest).emit('started', socket.id);
-  });
+  // socket.on('Over', function(data){
+  //   io.sockets.to(data).emit('Over', true);
+  // });
 
-  socket.on('songPart', function(data){
-    io.sockets.to(data.controller).emit('songPart', data);
-  });
-
-  socket.on('hasDied', function(data){
-    io.sockets.to(data).emit('hasDied', true);
-  });
-
-  socket.on('Over', function(data){
-    io.sockets.to(data).emit('Over', true);
-  });
-
-  socket.on('noReturn', function(data){
-    io.sockets.to(data).emit('noReturn', true);
-  });
+  // socket.on('noReturn', function(data){
+  //   io.sockets.to(data).emit('noReturn', true);
+  // });
 
 ///////////////////////////
 // Custom Functions
+
+function createNewPair(socketID){
+  for (var i = 0, l = controllerPairs.length; i < l; i++) {
+    if (controllerPairs[i].viewerID === socketID) {
+      console.log("this viewer exists!")
+    } else {
+      makeUniqueID(socketID)
+    }
+  }
+}
+
+function makeUniqueID(socketID){
+  ControllerPair.find().count(function(err, count){
+    // console.log(count);
+    var whichAlpha = 0;
+    if (count > 7950) {
+      whichAlpha = 1;
+    }
+    // console.log(whichAlpha);
+    genid(3,0,function(err,newid) {
+      if (err) {
+        throw err
+        return
+      }
+
+      var found = false;
+      for (var i = 0, l = controllerPairs.length; i < l; i++) {
+        if (controllerPairs[i].name === newid) {
+          controllerPairs[i].viewerID = socketID;
+          found = true;
+          break;
+        }
+      }
+
+      if (!found) {
+        var newPair = {
+          name: newid,
+          viewerID: socketID
+        }
+        controllerPairs.push(newPair)
+      }
+      io.sockets.to(socketID).emit('roomId', newid);
+    });
+  });
+}
 
 Object.size = function(obj) {
     var size = 0, key;
