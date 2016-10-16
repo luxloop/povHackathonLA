@@ -22,8 +22,7 @@
       "browser": false,
       "node": true
     },
-    "globals": {
-    },
+    "globals": {},
     "rules": {
       "no-use-before-define": 0,
       "vars-on-top": 0,
@@ -31,5 +30,12 @@
       "complexity": 0,
       "no-magic-numbers": 0
     }
+  },
+  "dependencies": {
+    "bignum": "^0.12.5",
+    "crypto": "0.0.3",
+    "express": "^4.14.0",
+    "serve-favicon": "^2.3.0",
+    "socket.io": "^1.5.0"
   }
 }
